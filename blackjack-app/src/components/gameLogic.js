@@ -1,20 +1,21 @@
-const suits = ['Hearts', 'Diamonds', 'Clubs', 'Spades'];
+const suits = ['♦','♣','♥','♠'];
 const cardValues = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King', 'Ace'];
 
 // Creates the deck(s)
 export function createDeck() {
     let deck = [];
     for (let suit of suits) {
-        for (let value of cardValues) {
-            deck.push({ suit, value });
-        }
+      for (let value of cardValues) {
+        deck.push({ suit, value });
+      }
     }
-    // shuffles the deck
+    // Shuffle the deck
     for (let i = deck.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [deck[i], deck[j] = deck[j], deck[i]] //swaps cards in the deck for shuffle
+      const j = Math.floor(Math.random() * (i + 1));
+      [deck[i], deck[j]] = [deck[j], deck[i]]; // Swap
     }
-}
+    return deck;
+  }
 
 // Calculates the score of a hand
 export function calculateScore(cards) {
@@ -45,5 +46,8 @@ export function checkGameStatus(playerScore, dealerScore) {
     if (dealerScore > 21) return 'Dealer busts! You win!';
     if (playerScore === 21) return 'Blackjack! You win!';
     if (dealerScore === 21) return 'Dealer has Blackjack! You lose.';
+    if (dealerScore === playerScore) return 'Push'
+    if (dealerScore > playerScore) return 'Dealer wins'
+    if (playerScore > dealerScore) return 'You win !'
     return '';
 }
