@@ -3,6 +3,7 @@ import './App.css';
 
 import React, {useState} from 'react';
 import { createDeck, calculateScore, checkGameStatus } from './components/gameLogic.js';
+const lodashClonedeep = require("lodash.clonedeep");
 
 function App() {
   const [deck, setDeck] = useState(createDeck());
@@ -13,24 +14,18 @@ function App() {
 
 
   const dealCards = () => {
-    // const newDeck = [...deck];
-    const newDeck = [...JSON.parse(JSON.stringify(deck))]
+    const newDeck = [...lodashClonedeep(deck)];
     const playerCards = [newDeck.pop(), newDeck.pop()];
     const dealerCards = [newDeck.pop(), newDeck.pop()];
-    // let dealerScore = calculateScore(dealerHand);
     setDeck(newDeck);
     setPlayerHand(playerCards);
     setDealerHand(dealerCards);
     setGameStatus('');
-    // if (dealerScore === 21) {
-    //   endGame();
-    // }
   };
 
   const playerHits = () => {
     if (gameStatus) return;
-    // const newDeck = [...deck];
-    const newDeck = [...JSON.parse(JSON.stringify(deck))]
+    const newDeck = [...lodashClonedeep(deck)];
     const newCard = newDeck.pop();
     const newPlayerHand = [...playerHand, newCard];
     setDeck(newDeck);
@@ -53,17 +48,12 @@ function App() {
   //     // Update state as necessary
   //   }
   // }
-  // const dealerBusts = () => {
+
+  // const checkDealer = () => {
   //   if (gameStatus) return;
   //   let dealerScore = calculateScore(dealerHand);
-  //   while (dealerScore < 17) {
-  //     const newDeck = [...deck];
-  //     dealerHand.push(newDeck.pop());
-  //     setDeck(newDeck);
-  //     setDealerHand(dealerHand);
-  //     dealerScore = calculateScore(dealerHand);
-  //   }
-  //   if (dealerScore >= 21) {
+  //   // let playerScore = calculateScore(playerHand)
+  //   if (dealerScore === 21) {
   //     endGame();
   //   }
   // }
@@ -71,20 +61,18 @@ function App() {
   const endGame = () => {
     let dealerScore = calculateScore(dealerHand);
     while (dealerScore < 17) {
-      // const newDeck = [...deck];
-      const newDeck = [...JSON.parse(JSON.stringify(deck))]
+      const newDeck = [...lodashClonedeep(deck)];
       dealerHand.push(newDeck.pop());
       setDeck(newDeck);
       setDealerHand(dealerHand);
       dealerScore = calculateScore(dealerHand);
     }
-    // if (dealerScore >= 21) {
-    //   endGame();
-    // }
     const playerScore = calculateScore(playerHand);
     const status = checkGameStatus(playerScore, dealerScore);
     setGameStatus(status);
   }
+
+
 
   return (
     <div className="App">
@@ -92,7 +80,6 @@ function App() {
         <h1>BlackJack</h1>
         <button onClick={dealCards}>Deal</button>
         <button onClick={playerHits}>Hit</button>
-        {/* <button onClick={dealerBusts && endGame}>Stand</button> */}
         <button onClick={endGame}>Stand</button>
         {/* <button onClick={splitHand}>Split</button> */}
         <div>

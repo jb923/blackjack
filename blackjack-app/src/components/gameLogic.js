@@ -15,7 +15,8 @@ export function createDeck() {
       [deck[i], deck[j]] = [deck[j], deck[i]]; // Swap
     }
     return deck;
-  }
+}
+
 
 // Calculates the score of a hand
 export function calculateScore(cards) {
@@ -44,9 +45,9 @@ export function calculateScore(cards) {
 export function checkGameStatus(playerScore, dealerScore) {
     if (playerScore > 21) return 'Bust! Hahah you lose';
     if (dealerScore > 21) return 'Dealer busts! You win!';
+    if (dealerScore === playerScore) return 'Push'
     if (playerScore === 21) return 'Blackjack! You win!';
     if (dealerScore === 21) return 'Dealer has Blackjack! You lose.';
-    if (dealerScore === playerScore) return 'Push'
     if (dealerScore > playerScore) return 'Dealer wins'
     if (playerScore > dealerScore) return 'You win !'
     return '';
