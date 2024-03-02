@@ -32,7 +32,7 @@ function App() {
     setPlayerHand(newPlayerHand);
     const playerScore = calculateScore(newPlayerHand);
     if (playerScore >= 21) {
-      endGame();
+      return endGame();
     }
   };
 
@@ -83,18 +83,18 @@ function App() {
         <button onClick={endGame}>Stand</button>
         {/* <button onClick={splitHand}>Split</button> */}
         <div>
-          <h2>Player</h2>
-          {playerHand.map((card,index) => (
-            <div key ={index}>{`${card.value} of ${card.suit}`} </div>
-          ))}
-          <p>Score: {calculateScore(playerHand)}</p>
-        </div>
-        <div>
           <h2>Dealer</h2>
           {dealerHand.map((card,index) => (
             <div key ={index}>{`${card.value} of ${card.suit}`} </div>
           ))}
           <p>Score: {calculateScore(dealerHand)}</p>
+        </div>
+        <div>
+          <h2>Player</h2>
+          {playerHand.map((card,index) => (
+            <div key ={index}>{`${card.value} of ${card.suit}`} </div>
+          ))}
+          <p>Score: {calculateScore(playerHand)}</p>
         </div>
         {gameStatus && <p>{gameStatus}</p>}
       </header>
