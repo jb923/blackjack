@@ -7,11 +7,18 @@ const lodashClonedeep = require("lodash.clonedeep");
 
 function App() {
   const [deck, setDeck] = useState(createDeck());
-  // const [players, setplayers] = useState([]);
+  // const [playerState, setPlayerState] = useState(initialPlayerState);
   const [playerHand, setPlayerHand] = useState([]);
   const [dealerHand, setDealerHand] = useState([]);
   const [gameStatus, setGameStatus] = useState('');
 
+  const initialPlayerState = {
+    hands: [[]], // array of player's hands, initially one empty hand
+    balance: 1000, // starting balance
+    bet: 0, // current bet
+  };
+
+  const [playerState, setPlayerState] = useState(initialPlayerState);
 
   const dealCards = () => {
     const newDeck = [...lodashClonedeep(deck)];
@@ -72,12 +79,42 @@ function App() {
     setGameStatus(status);
   }
 
+  const placeBet = (amount) => {
+    if (amount <= playerState.balance) {
+      setPlayerState((prevState) => ({
+        ...prevState,
+        bet: amount,
+        balance: prevState.balance - amount,
+      }));
+    } else {
+      console.log("Insufficient balance");
+    }
+  };
+
+  const increaseBet = (amount) => {
+    placeBet(playerState.bet + amount);
+  };
+
+  const decreaseBet = (amount) => {
+    placeBet(playerState.bet - amount);
+  };
+
 
 
   return (
     <div className="App">
       <header className="blackjack-header">
         <h1>BlackJack</h1>
+        <div>
+        <p>Balance: {playerState.balance}</p>
+        <p>Current Bet: {playerState.bet}</p>
+        <button onClick={() => increaseBet(10)}>+10</button>
+        <button onClick={() => increaseBet(50)}>+50</button>
+        <button onClick={() => decreaseBet(10)}>-10</button>
+        <button onClick={() => decreaseBet(50)}>-50</button>
+        <button onClick={() => placeBet(100)}>Bet 100</button>
+        <button onClick={() => placeBet(500)}>Bet 500</button>
+        </div>
         <button onClick={dealCards}>Deal</button>
         <button onClick={playerHits}>Hit</button>
         <button onClick={endGame}>Stand</button>
