@@ -11,6 +11,7 @@ function App() {
   const [playerHand, setPlayerHand] = useState([]);
   const [dealerHand, setDealerHand] = useState([]);
   const [gameStatus, setGameStatus] = useState('');
+  // const [players, setPlayers] = useState([]);
 
   const initialPlayerState = {
     hands: [[]], // array of player's hands, initially one empty hand
@@ -38,8 +39,8 @@ function App() {
     setDeck(newDeck);
     setPlayerHand(newPlayerHand);
     const playerScore = calculateScore(newPlayerHand);
-    if (playerScore >= 21) {
-      return endGame();
+    if (playerScore > 21) {
+      endGame();
     }
   };
 
@@ -52,16 +53,6 @@ function App() {
   //     player.balance -= player.bet;
   //     const newHands = [...player.hands, [hand.pop()]]; // Removes one card from original hand and starts a new hand
   //     player.hands = newHands;
-  //     // Update state as necessary
-  //   }
-  // }
-
-  // const checkDealer = () => {
-  //   if (gameStatus) return;
-  //   let dealerScore = calculateScore(dealerHand);
-  //   // let playerScore = calculateScore(playerHand)
-  //   if (dealerScore === 21) {
-  //     return endGame();
   //   }
   // }
 
