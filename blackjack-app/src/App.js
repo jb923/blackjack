@@ -3,7 +3,7 @@ import './App.css';
 
 import React, {useState} from 'react';
 import { createDeck, calculateScore, checkGameStatus } from './components/gameLogic.js';
-const lodashClonedeep = require("lodash.clonedeep");
+// const lodashClonedeep = require("lodash.clonedeep");
 
 function App() {
   const [deck, setDeck] = useState(createDeck());
@@ -21,7 +21,7 @@ function App() {
   const [playerState, setPlayerState] = useState(initialPlayerState);
 
   const dealCards = () => {
-    const newDeck = [...lodashClonedeep(deck)];
+    const newDeck = [...deck];
     const playerCards = [newDeck.pop(), newDeck.pop()];
     const dealerCards = [newDeck.pop(), newDeck.pop()];
     setDeck(newDeck);
@@ -32,7 +32,7 @@ function App() {
 
   const playerHits = () => {
     if (gameStatus) return;
-    const newDeck = [...lodashClonedeep(deck)];
+    const newDeck = [...deck];
     const newCard = newDeck.pop();
     const newPlayerHand = [...playerHand, newCard];
     setDeck(newDeck);
@@ -61,23 +61,35 @@ function App() {
   //   let dealerScore = calculateScore(dealerHand);
   //   // let playerScore = calculateScore(playerHand)
   //   if (dealerScore === 21) {
-  //     endGame();
+  //     return endGame();
   //   }
   // }
 
   const endGame = () => {
     let dealerScore = calculateScore(dealerHand);
-    while (dealerScore < 17) {
-      const newDeck = [...lodashClonedeep(deck)];
-      dealerHand.push(newDeck.pop());
-      setDeck(newDeck);
-      setDealerHand(dealerHand);
-      dealerScore = calculateScore(dealerHand);
-    }
+
+    const drawDealerCards = (currentDeck, currentDealerHand) => {
+      let updatedDeck = [...currentDeck];
+      let updatedDealerHand = [...currentDealerHand];
+      let updatedDealerScore = calculateScore(updatedDealerHand);
+
+      while (updatedDealerScore < 17) {
+        const newCard = updatedDeck.pop();
+        updatedDealerHand.push(newCard);
+        updatedDealerScore = calculateScore(updatedDealerHand);
+      }
+      return { updatedDeck, updatedDealerHand };
+    };
+
+    const { updatedDeck, updatedDealerHand } = drawDealerCards(deck, dealerHand);
+
+    setDeck(updatedDeck);
+    setDealerHand(updatedDealerHand);
+    dealerScore = calculateScore(updatedDealerHand);
     const playerScore = calculateScore(playerHand);
     const status = checkGameStatus(playerScore, dealerScore);
     setGameStatus(status);
-  }
+  };
 
   const placeBet = (amount) => {
     if (amount <= playerState.balance) {
@@ -85,11 +97,19 @@ function App() {
         ...prevState,
         bet: amount,
         balance: prevState.balance - amount,
+        currentBet: prevState.currentBet + amount,
       }));
     } else {
       console.log("Insufficient balance");
     }
   };
+
+  // const resetBet = () => {
+  //   setPlayerState((prevState) => ({
+  //     ...prevState,
+  //     currentBet: 0,
+  //   }));
+  // };
 
   const increaseBet = (amount) => {
     placeBet(playerState.bet + amount);
@@ -99,6 +119,13 @@ function App() {
     placeBet(playerState.bet - amount);
   };
 
+  // const updateBalanceAfterRound = (win) => {
+  //   setPlayerState((prevState) => ({
+  //     ...prevState,
+  //     balance: win ? prevState.balance + prevState.currentBet * 2 : prevState.balance,
+  //     // If the player wins, they get double their current bet, else balance remains unchanged
+  //   }));
+  // };
 
 
   return (
@@ -108,12 +135,15 @@ function App() {
         <div>
         <p>Balance: {playerState.balance}</p>
         <p>Current Bet: {playerState.bet}</p>
+        <button onClick={() => increaseBet(5)}>+5</button>
         <button onClick={() => increaseBet(10)}>+10</button>
+        <button onClick={() => increaseBet(25)}>+25</button>
         <button onClick={() => increaseBet(50)}>+50</button>
+        <button onClick={() => increaseBet(100)}>+100</button>
+        <button onClick={() => decreaseBet(5)}>-5</button>
         <button onClick={() => decreaseBet(10)}>-10</button>
-        <button onClick={() => decreaseBet(50)}>-50</button>
-        <button onClick={() => placeBet(100)}>Bet 100</button>
-        <button onClick={() => placeBet(500)}>Bet 500</button>
+        <button onClick={() => decreaseBet(100)}>-50</button>
+        {/* <button onClick={() => resetBet()}>Clear Bet</button> */}
         </div>
         <button onClick={dealCards}>Deal</button>
         <button onClick={playerHits}>Hit</button>

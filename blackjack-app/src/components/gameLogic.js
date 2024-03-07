@@ -43,7 +43,21 @@ export function calculateScore(cards) {
 }
 
 export function checkGameStatus(playerScore, dealerScore) {
-    if (playerScore > 21) return 'Bust! Hahah you lose';
+    // if (playerScore > 21) {
+    //     return 'Bust! Hahah you lose'
+    // } else if (playerScore > dealerScore) {
+    //     return 'You win !'
+    // } else if (playerScore === 21) {
+    //     return 'Blackjack! You win!';
+    // };
+
+    // if (dealerScore === playerScore) {
+    //     return 'Push';
+    // } else if (dealerScore > 21) {
+    //     return 'Dealer busts! You win!';
+    // } else if (dealerScore > playerScore) {
+    //     return 'Dealer wins';
+    // }
     if (dealerScore > 21) return 'Dealer busts! You win!';
     if (dealerScore === playerScore) return 'Push'
     if (playerScore === 21) return 'Blackjack! You win!';
